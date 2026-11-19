@@ -1,4 +1,5 @@
 from functools import lru_cache
+from os import getenv
 from pathlib import Path
 
 from pydantic import Field, field_validator
@@ -48,4 +49,6 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    if getenv("APP_ENV") == "production":
+        return Settings(_env_file=Path(__file__).resolve().parents[1] / ".env.production")
     return Settings()
