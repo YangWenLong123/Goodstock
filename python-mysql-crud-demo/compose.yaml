@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.4
+    ports:
+      - "127.0.0.1:3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: local_demo_root_password
+      MYSQL_DATABASE: fastapi_shop
+      MYSQL_USER: shop_demo
+      MYSQL_PASSWORD: local_demo_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-products.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  mysql_data:
